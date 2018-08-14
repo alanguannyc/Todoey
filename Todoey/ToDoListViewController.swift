@@ -17,10 +17,7 @@ class ToDoListViewController: UITableViewController {
         super.viewDidLoad()
 
         
-        let newItem = Item()
-        newItem.title = "eat lunch"
-        itemArray.append(newItem)
-        
+        loadItems()
        
 //        self.defaults.set(itemArray, forKey: "TodoListArray")
     }
@@ -88,6 +85,18 @@ class ToDoListViewController: UITableViewController {
             try data.write(to: dataFilePath!)
         } catch {
             print("error coding items, \(error)")
+        }
+    }
+    
+    //MARK function load items
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+                itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Error decoding data, \(error)")
+            }
         }
     }
 }
